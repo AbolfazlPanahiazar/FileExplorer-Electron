@@ -1,4 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
+const fs = require("fs");
+const path = require("path");
 
 function createWindow() {
   // Create the browser window.
@@ -7,6 +9,7 @@ function createWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true,
     },
   });
 
@@ -25,9 +28,17 @@ app.on("window-all-closed", () => {
 });
 
 ////////////////////////////////
-//////////// IPCs //////////////
+//////////// IPCs response //////////////
 ////////////////////////////////
-ipcMain.on("asynchronous-message", (event, arg) => {
-  console.log(arg); // prints "ping"
-  event.reply("asynchronous-reply", "pong");
+ipcMain.on("get files", (event, data) => {
+  // If it's in the root and want to return back
+  if (data == "Close") {
+    app.quit();
+  }
+  // Read file and response the inner files
+  else {
+    fs.readdir(data, (err, files) => {
+      event.returnValue = JSON.stringify(files);
+    });
+  }
 });
