@@ -1,0 +1,21 @@
+{
+  "name": "file-explorer-electron",
+  "version": "1.0.0",
+  "description": "a simple thing like this pc in windows to access files and folders",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbolfazlPanahiazar/Matab34-FileExplorer-Electron.git"
+  },
+  "author": "Abolfazl Panahiazar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AbolfazlPanahiazar/Matab34-FileExplorer-Electron/issues"
+  },
+  "devDependencies": {
+    "electron": "^9.0.4"
+  }
+}
