@@ -3,12 +3,83 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-    <title>Abolitionist File Explorer</title>
-    <link rel="stylesheet" href="./style.css" />
+    <title>Especial Filer</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: inherit;
+      }
+
+      html {
+        font-size: 62.5%; /* rem=10px*/
+      }
+
+      body {
+        box-sizing: border-box;
+        background-image: url(./images/background.jpg);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        height: 100vh;
+      }
+      .container {
+        position: relative;
+      }
+      .item {
+        cursor: pointer;
+      }
+      .item img {
+        transition: all 0.3s;
+      }
+      .item img:hover {
+        transform: scale(1.1);
+        transition: all 0.3s;
+      }
+      footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+    </style>
   </head>
   <body>
-    <h1>Hello World!</h1>
+    <div class="container h-100">
+      <header class="row bg-primary d-flex justify-content-center py-5 rounded shadow">
+        <h1 class="text-warning">Theee Especial Filer</h1>
+      </header>
+      <main class="row">
+        <div id="0" class="col-2 d-flex flex-column align-items-center item">
+          <img class="w-75" src="./images/return.png" alt="folder icon" />
+          <span class="h4 text-light">Back</span>
+        </div>
 
+        <div id="1" class="col-2 d-flex flex-column align-items-center item">
+          <img class="w-75" src="./images/folder.png" alt="folder icon" />
+          <span class="h4 text-light">C drive</span>
+        </div>
+
+        <div id="2" class="col-2 d-flex flex-column align-items-center item">
+          <img class="w-75" src="./images/folder.png" alt="folder icon" />
+          <span class="h4 text-light">D drive</span>
+        </div>
+
+        <div id="2" class="col-2 d-flex flex-column align-items-center item">
+          <img class="w-75" src="./images/file.png" alt="folder icon" />
+          <span class="h4 text-light">E drive</span>
+        </div>
+      </main>
+      <footer class="w-100 bg-dark d-flex justify-content-center py-2 rounded">
+        <span class="text-light h4">Developed by Abolfazl Panahiazar</span>
+      </footer>
+    </div>
+
+    <script>
+      require("bootstrap");
+    </script>
     <script src="./renderer.js"></script>
   </body>
 </html>
