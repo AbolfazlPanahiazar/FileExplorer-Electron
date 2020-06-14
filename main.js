@@ -27,9 +27,11 @@ app.on("window-all-closed", () => {
   }
 });
 
-////////////////////////////////
+/////////////////////////////////////////
 //////////// IPCs response //////////////
-////////////////////////////////
+/////////////////////////////////////////
+const _map = [];
+
 ipcMain.on("get files", (event, data) => {
   // If it's in the root and want to return back
   if (data == "Close") {
@@ -37,8 +39,28 @@ ipcMain.on("get files", (event, data) => {
   }
   // Read file and response the inner files
   else {
+    _map.push(data);
+    let _path = _map.join("/");
+    _path = _path.slice(0, 2) + _path.slice(3);
+
     fs.readdir(data, (err, files) => {
-      event.returnValue = JSON.stringify(files);
+      const response = [];
+      for (let i = 0; i < files.length; i++) {
+        try {
+          const obj = {};
+          obj.name = files[i];
+          let state = fs.statSync(`${_path}/${files[i]}`);
+          if (state.isDirectory()) {
+            obj.type = "folder";
+          } else {
+            obj.type = "file";
+          }
+          response.push(obj);
+        } catch (er) {
+          console.log(er);
+        }
+      }
+      event.returnValue = response;
     });
   }
 });
