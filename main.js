@@ -38,12 +38,33 @@ ipcMain.on("get files", (event, data) => {
     app.quit();
   }
   // Read file and response the inner files
-  else {
+  else if (data == _map[_map.length - 1]) {
+    _map.pop();
+    let _path = _map.join("/");
+    fs.readdir(_path, (err, files) => {
+      const response = [];
+      for (let i = 0; i < files.length; i++) {
+        try {
+          const obj = {};
+          obj.name = files[i];
+          let state = fs.statSync(`${_path}/${files[i]}`);
+          if (state.isDirectory()) {
+            obj.type = "folder";
+          } else {
+            obj.type = "file";
+          }
+          response.push(obj);
+        } catch (er) {
+          console.log(er);
+        }
+      }
+      event.returnValue = response;
+    });
+  } else {
     _map.push(data);
     let _path = _map.join("/");
-    _path = _path.slice(0, 2) + _path.slice(3);
 
-    fs.readdir(data, (err, files) => {
+    fs.readdir(_path, (err, files) => {
       const response = [];
       for (let i = 0; i < files.length; i++) {
         try {
