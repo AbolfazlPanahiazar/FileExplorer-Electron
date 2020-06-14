@@ -4,21 +4,29 @@ const { ipcRenderer } = require("electron");
 const items = document.getElementsByClassName("item");
 Array.prototype.forEach.call(items, function (item) {
   item.addEventListener("click", function () {
-    const newFiles = ipcRenderer.sendSync("get files", item.children[1].innerText);
-    renderUI(newFiles, item.children[1].innerText);
+    if (item.id == "backbtn") {
+      const newFiles = ipcRenderer.sendSync("get files", document.getElementsByTagName("h4")[0].innerText);
+      renderUI(newFiles);
+    } else {
+      const newFiles = ipcRenderer.sendSync("get files", item.children[1].innerText);
+      renderUI(newFiles);
+    }
   });
 });
 
-function renderUI(newFiles, back) {
+function renderUI(newFiles) {
+  // h4 insert
+  document.getElementsByTagName("h4")[0].innerText = newFiles[0].parent;
+
   // Delete formal files
   document.getElementById("main").innerHTML = "";
 
   // Create back button and append
   const backElemnt = document.createElement("div");
   backElemnt.innerHTML = `<img class="w-75" src="./images/return.png" alt="folder icon" />
-  <div class="h4 text-light">${back}</div>`;
+  <div class="h4 text-light">${newFiles[0].grandParent}</div>`;
   backElemnt.classList = "col-2 d-flex flex-column align-items-center item";
-  backElemnt.id = 0;
+  backElemnt.id = "backbtn";
   document.getElementById("main").appendChild(backElemnt);
 
   // Create new files and append them
@@ -41,8 +49,13 @@ function renderUI(newFiles, back) {
   const items = document.getElementsByClassName("item");
   Array.prototype.forEach.call(items, function (item) {
     item.addEventListener("click", function () {
-      const newFiles = ipcRenderer.sendSync("get files", item.children[1].innerText);
-      renderUI(newFiles, item.children[1].innerText);
+      if (item.id == "backbtn") {
+        const newFiles = ipcRenderer.sendSync("get files", document.getElementsByTagName("h4")[0].innerText);
+        renderUI(newFiles);
+      } else {
+        const newFiles = ipcRenderer.sendSync("get files", item.children[1].innerText);
+        renderUI(newFiles);
+      }
     });
   });
 }

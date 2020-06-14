@@ -34,33 +34,70 @@ const _map = [];
 
 ipcMain.on("get files", (event, data) => {
   // If it's in the root and want to return back
-  if (data == "Close") {
+  if (data == "root") {
     app.quit();
   }
-  // Read file and response the inner files
+
+  // Back request
   else if (data == _map[_map.length - 1]) {
     _map.pop();
-    let _path = _map.join("/");
-    fs.readdir(_path, (err, files) => {
-      const response = [];
-      for (let i = 0; i < files.length; i++) {
-        try {
-          const obj = {};
-          obj.name = files[i];
-          let state = fs.statSync(`${_path}/${files[i]}`);
-          if (state.isDirectory()) {
-            obj.type = "folder";
-          } else {
-            obj.type = "file";
-          }
-          response.push(obj);
-        } catch (er) {
-          console.log(er);
-        }
-      }
+
+    // Back to root
+    if (_map.length == 0) {
+      const obj1 = {
+        parent: "root",
+        grandParent: "Close",
+        name: "C:/",
+        type: "folder",
+      };
+      const obj2 = {
+        parent: "root",
+        grandParent: "Close",
+        name: "D:/",
+        type: "folder",
+      };
+      const obj3 = {
+        parent: "root",
+        grandParent: "Close",
+        name: "E:/",
+        type: "folder",
+      };
+      const response = [obj1, obj2, obj3];
       event.returnValue = response;
-    });
-  } else {
+    }
+
+    // Just Back
+    else {
+      let _path = _map.join("/");
+      fs.readdir(_path, (err, files) => {
+        const response = [];
+        for (let i = 0; i < files.length; i++) {
+          try {
+            const obj = {};
+            obj.name = files[i];
+            obj.parent = _map[_map.length - 1];
+            obj.grandParent = _map[_map.length - 2];
+            if (obj.grandParent == undefined) {
+              obj.grandParent = "root";
+            }
+            let state = fs.statSync(`${_path}/${files[i]}`);
+            if (state.isDirectory()) {
+              obj.type = "folder";
+            } else {
+              obj.type = "file";
+            }
+            response.push(obj);
+          } catch (er) {
+            console.log(er);
+          }
+        }
+        event.returnValue = response;
+      });
+    }
+  }
+
+  // non-back request
+  else {
     _map.push(data);
     let _path = _map.join("/");
 
@@ -70,6 +107,11 @@ ipcMain.on("get files", (event, data) => {
         try {
           const obj = {};
           obj.name = files[i];
+          obj.parent = _map[_map.length - 1];
+          obj.grandParent = _map[_map.length - 2];
+          if (obj.grandParent == undefined) {
+            obj.grandParent = "root";
+          }
           let state = fs.statSync(`${_path}/${files[i]}`);
           if (state.isDirectory()) {
             obj.type = "folder";
